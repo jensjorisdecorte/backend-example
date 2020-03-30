@@ -24,9 +24,14 @@ db.serialize(() => {
   }
 });
 
+// Nodig om de json data van o.a. POST requests te processen
+// De json data van een request is de vinden in het veld req.body
+app.use(express.json());
+
 // Sta externe communicatie toe
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "*");  // heeft te maken met HTTP headers (indien geïnteresseerd kan je dit nalezen op https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Headers)
   next();
 });
 
@@ -47,9 +52,9 @@ app.get("/users", (req, res) => {
 });
 
 // Voeg een gebruiker toe aan de database
-app.get("/add", (req, res) => {
+app.post("/users", (req, res) => {  // /users url in plaats van /add (1 URL kan meerdere methodes beantwoorden)
   // controleer of de name parameter is meegegeven
-  let name = req.query.name;
+  let name = req.body.name; // POST data zit in de HTTP body (en dus niet in de url parameters)
   if (!name) {
     res.send({ error: "No name argument found" });
     return;
