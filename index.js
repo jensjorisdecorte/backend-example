@@ -78,6 +78,18 @@ app.post("/users", (req, res) => {
   });
 });
 
+// Antwoord met een lijst van alle gebruikers
+app.delete("/users", (req, res) => {
+  let name = req.query.name;
+  db.all("DELETE from Users WHERE name LIKE ?", name, (err, result) => {
+    if (err) {
+      res.send({ error: err });
+      return;
+    }
+    res.send(JSON.stringify(result));
+  });
+});
+
 // Voeg een notitie toe
 app.get("/addnote", (req, res) => {
   // controleer of de parameters meegegeven zijn
